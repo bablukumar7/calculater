@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beautiful Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #aaadb2, #2a5298);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #calculator {
+      background: linear-gradient(145deg, #e8e9ea, #34495e);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      max-width: 350px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #display {
+      width: 100%;
+      height: 80px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+      color: #ffffff;
+      font-size: 2.5rem;
+      font-weight: 300;
+      text-align: right;
+      padding: 0 20px;
+      margin-bottom: 25px;
+      outline: none;
+      box-shadow: 
+        inset 0 4px 8px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.1);
+      letter-spacing: 1px;
+    }
+
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .button {
+      height: 65px;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+      position: relative;
+      box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    }
+
+    .button:active {
+      transform: translateY(2px);
+      box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    }
+
+    /* Number buttons - Dark elegant */
+    .button {
+      background: linear-gradient(145deg, #4a5568, #2d3748);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .button:hover {
+      background: linear-gradient(145deg, #5a6578, #3d4758);
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.2) inset;
+    }
+
+    /* Operator buttons - Orange accent */
+    .operator {
+      background: linear-gradient(145deg, #f6ad55, #ed8936);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .operator:hover {
+      background: linear-gradient(145deg, #f7b76b, #f69d3c);
+      box-shadow: 
+        0 8px 16px rgba(237, 137, 54, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    }
+
+    /* Clear button - Red accent */
+    #clear {
+      background: linear-gradient(145deg, #fc8181, #e53e3e);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #clear:hover {
+      background: linear-gradient(145deg, #feb2b2, #fc8181);
+      box-shadow: 
+        0 8px 16px rgba(229, 62, 62, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    }
+
+    /* Equals button - Green accent */
+    #equals {
+      background: linear-gradient(145deg, #68d391, #38a169);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      grid-row: span 2;
+    }
+
+    #equals:hover {
+      background: linear-gradient(145deg, #9ae6b4, #68d391);
+      box-shadow: 
+        0 8px 16px rgba(56, 161, 105, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    }
+
+    /* Special buttons styling */
+    .special {
+      background: linear-gradient(145deg, #805ad5, #6b46c1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .special:hover {
+      background: linear-gradient(145deg, #9f7aea, #805ad5);
+      box-shadow: 
+        0 8px 16px rgba(107, 70, 193, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    }
+
+    /* Wide zero button */
+    .wide {
+      grid-column: span 2;
+    }
+
+    /* Button text shadows for better readability */
+    .button {
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+      #calculator {
+        padding: 25px;
+        max-width: 300px;
+      }
+      
+      #display {
+        font-size: 2rem;
+        height: 70px;
+      }
+      
+      .button {
+        height: 60px;
+        font-size: 1.2rem;
+      }
+      
+      .button-container {
+        gap: 12px;
+      }
+    }
+
+    /* Add subtle animation on load */
+    #calculator {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="calculator">
+    <!-- Display screen -->
+    <input type="text" id="display" placeholder="0" readonly>
+    
+    <!-- Buttons -->
+    <div class="button-container">
+      <button class="button special" id="clear" onclick="clearDisplay()">AC</button>
+      <button class="button special" onclick="deleteLast()">⌫</button>
+      <button class="button special" onclick="appendToDisplay('%')">%</button>
+      <button class="button operator" onclick="appendToDisplay('/')">÷</button>
+      
+      <button class="button" onclick="appendToDisplay('7')">7</button>
+      <button class="button" onclick="appendToDisplay('8')">8</button>
+      <button class="button" onclick="appendToDisplay('9')">9</button>
+      <button class="button operator" onclick="appendToDisplay('*')">×</button>
+      
+      <button class="button" onclick="appendToDisplay('4')">4</button>
+      <button class="button" onclick="appendToDisplay('5')">5</button>
+      <button class="button" onclick="appendToDisplay('6')">6</button>
+      <button class="button operator" onclick="appendToDisplay('-')">−</button>
+      
+      <button class="button" onclick="appendToDisplay('1')">1</button>
+      <button class="button" onclick="appendToDisplay('2')">2</button>
+      <button class="button" onclick="appendToDisplay('3')">3</button>
+      <button class="button operator" onclick="appendToDisplay('+')">+</button>
+      
+      <button class="button wide" onclick="appendToDisplay('0')">0</button>
+      <button class="button" onclick="appendToDisplay('.')">.</button>
+      <button class="button" id="equals" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let currentDisplay = '';
+    const display = document.querySelector('#display');
+
+    function updateDisplay() {
+      display.value = currentDisplay || '0';
+    }
+
+    function appendToDisplay(value) {
+      // Handle percentage
+      if (value === '%') {
+        if (currentDisplay) {
+          currentDisplay = (parseFloat(currentDisplay) / 100).toString();
+        }
+        updateDisplay();
+        return;
+      }
+      
+      // Prevent multiple decimal points
+      if (value === '.' && currentDisplay.includes('.')) {
+        return;
+      }
+      
+      if (currentDisplay === '0' && value !== '.') {
+        currentDisplay = value;
+      } else {
+        currentDisplay += value;
+      }
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentDisplay = '';
+      updateDisplay();
+    }
+
+    function deleteLast() {
+      currentDisplay = currentDisplay.slice(0, -1);
+      updateDisplay();
+    }
+
+    function calculateResult() {
+      try {
+        // Replace display symbols with actual operators
+        let expression = currentDisplay.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+        let result = eval(expression);
+        
+        // Handle division by zero and other errors
+        if (!isFinite(result)) {
+          currentDisplay = 'Error';
+        } else {
+          // Round to avoid floating point precision issues
+          result = Math.round(result * 100000000) / 100000000;
+          currentDisplay = result.toString();
+        }
+      } catch (error) {
+        currentDisplay = 'Error';
+      }
+      updateDisplay();
+    }
+
+  
+
+    // Initialize display
+    updateDisplay();
+  </script>
+</body>
+</html>
